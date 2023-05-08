@@ -22,6 +22,23 @@ class JobData(db.Model):
     job_location = db.Column(db.String(255))
 
 
+#users model for the bloodBank starts here
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firebase_id = db.Column(db.String(255))
+    name = db.Column(db.String(255))
+    email = db.Column(db.String(255))
+    user_photo = db.Column(db.String(255))
+    phone = db.Column(db.Integer )
+    state = db.Column(db.String(255) )
+    city = db.Column(db.String(255) )
+    street = db.Column(db.String(255) )
+    age = db.Column(db.Integer )
+    gender = db.Column(db.String(255) )
+    blood_type = db.Column(db.String(255) )
+#users medel for the bloodBank starts here
+
+
 @app.route('/jobs', methods=['GET','POST'])
 def post_job():
   if request.method == 'POST':
@@ -85,7 +102,93 @@ def get_job(id):
     response = jsonify(serialized_job)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+
+#users for the bloodBank starts here
+@app.route('/users', methods=['GET','POST'])
+def users():
+  if request.method == 'POST':
+    firebase_id = request.form.get('firebase_id')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    user_photo = request.files['user_photo']
+    user_photo_name = user_photo.save(f'https://github.com/C-o-m-o-n/bloodBank/blob/main/public/{user_photo.filename}')
+    phone = request.form.get('phone')
+    state = request.form.get('state')
+    city = request.form.get('city')
+    street = request.form.get('street')
+    age = request.form.get('age')
+    gender = request.form.get('gender')
+    blood_type = request.form.get('blood_type')
     
-        
+    
+    new_data = Users(
+      name=name,
+      phone=phone,
+      firebase_id=firebase_id,
+      email=email,
+      user_photo=user_photo.filename,
+      state=state,
+      city=city,
+      street=street,
+      age=age,
+      gender=gender,
+      blood_type=blood_type,
+      )
+    db.create_all()
+    db.session.add(new_data)
+    db.session.commit()
+    return 'Data saved successfully'
+  
+  elif request.method == 'GET':
+    user_email = request.args.get('email')
+    user = Users.query.filter_by(email=user_email).first()
+    serialized_users = []
+    serialized_user = {
+      'id': user.id,
+      'name': user.name,
+      'firebase_id': user.firebase_id,
+      'email': user.email,
+      'user_photo': user.user_photo,
+      'phone': user.phone,
+      'state': user.state,
+      'city': user.city,
+      'street': user.street,
+      'age': user.age,
+      'gender': user.gender,
+      'blood_type': user.blood_type,
+        }
+    serialized_users.append(serialized_user)
+
+    response = jsonify(serialized_users)
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+    
+
+
+@app.route('/users/<int:id>', methods=['GET'])
+def get_users(id):
+    user = Users.query.filter_by(id=id).first()
+    serialized_user = {
+            'id': user.id,
+            'name': user.name,
+            'firebase_id': user.firebase_id,
+            'email': user.email,
+            'user_photo': user.user_photo,
+            'phone': user.phone,
+            'state': user.state,
+            'city': user.city,
+            'street': user.street,
+        }
+    serialized_userse.append(serialized_user)
+    response = jsonify(serialized_users)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+    return 'user details saved successfully'
+
+#users for the bloodBank ends here
+
+
 if __name__ == '__main__':
     app.run(debug=True)
