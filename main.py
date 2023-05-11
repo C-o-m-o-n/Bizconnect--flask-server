@@ -107,7 +107,8 @@ def get_job(id):
 def my_jobs():
     user_id = request.args.get('user_id')
     my_jobs = JobData.query.filter_by(user_id=user_id).all()
-    serialized_job = {
+    for job in my_jobs:
+        serialized_job = {
             'id': job.id,
             'name': job.name,
             'email': job.email,
