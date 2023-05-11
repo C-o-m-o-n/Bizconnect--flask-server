@@ -36,7 +36,7 @@ class Users(db.Model):
     age = db.Column(db.Integer )
     gender = db.Column(db.String(255) )
     blood_type = db.Column(db.String(255) )
-#users medel for the bloodBank starts here
+#users medel for the bloodBank ends here
 
 
 @app.route('/jobs', methods=['GET','POST'])
@@ -87,6 +87,26 @@ def post_job():
 @app.route('/jobs/<int:id>', methods=['GET'])
 def get_job(id):
     job = JobData.query.filter_by(id=id).first()
+    serialized_job = {
+            'id': job.id,
+            'name': job.name,
+            'email': job.email,
+            'user_photo': job.user_photo,
+            'user_id': job.user_id,
+            'phone': job.phone,
+            'job_title': job.job_name,
+            'job_description': job.job_description,
+            'job_location': job.job_location,
+            'job_photo': job.job_photo,
+    }
+    response = jsonify(serialized_job)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+    
+@app.route('/my_jobs', methods=['GET'])
+def my_jobs():
+    user_id = request.args.get('user_id')
+    my_jobs = JobData.query.filter_by(user_id=user_id).all()
     serialized_job = {
             'id': job.id,
             'name': job.name,
