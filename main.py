@@ -106,7 +106,7 @@ def get_job(id):
 @app.route('/my_jobs', methods=['GET'])
 def my_jobs():
     user_id = request.args.get('user_id')
-    my_jobs = JobData.query.filter_by(user_id=user_id).all()
+    my_jobs = JobData.query.filter_by(user_id=user_id)
     for job in my_jobs:
         serialized_job = {
             'id': job.id,
