@@ -133,7 +133,7 @@ def users():
     name = request.form.get('name')
     email = request.form.get('email')
     user_photo = request.files['user_photo']
-    user_photo_name = user_photo.save(f'https://github.com/C-o-m-o-n/bloodBank/blob/main/public/{user_photo.filename}')
+    user_photo_name = user_photo.save(f'https://flask-production-356c.up.railway.app/_next/image?url=%2F..%2Fpublic%2F{user_photo.filename}&w=256&q=75')
     phone = request.form.get('phone')
     state = request.form.get('state')
     city = request.form.get('city')
