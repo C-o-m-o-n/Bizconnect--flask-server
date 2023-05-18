@@ -133,7 +133,7 @@ def users():
     name = request.form.get('name')
     email = request.form.get('email')
     user_photo = request.files['user_photo']
-    user_photo_name = user_photo.save(f'images/{user_photo.filename}')
+    user_photo_name = user_photo.save(user_photo.filename)
     phone = request.form.get('phone')
     state = request.form.get('state')
     city = request.form.get('city')
